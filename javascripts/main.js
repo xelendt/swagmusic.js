@@ -1,3 +1,20 @@
+var Vector = function (x, y, z) {
+	return {
+		x: x, 
+		y: y, 
+		z: z,
+
+		subtract: function (p) {
+			return new Vector(x - p.x, y - p.y, z - p.z);
+		},
+		add: function (p) {
+			return new Vector(x + p.x, y + p.y, z + p.z);
+		}
+	};
+};
+
+var PI = 3.1415926;
+
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
@@ -221,6 +238,10 @@ HeadMesh.position.y = 115;
 HeadMesh.position.z = 0;
 Head.add(HeadMesh);
 
+var joints = [hipJoint, LHipJoint, RHipJoint, LKnee, RKnee, LShoulder, RShoulder, LElbow, RElbow];
+var jointMeshs = [hipJointMesh, LHipJointMesh, RHipJointMesh, LKneeMesh, RKneeMesh, LShoulderMesh, RShoulderMesh, LElbowMesh, RElbowMesh];
+var acc = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0)];
+var vel = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0)];
 
 function translate( object, x, y, z ){
 
@@ -229,32 +250,36 @@ function translate( object, x, y, z ){
 	object.translateZ(  z );
 }
 
-function rotate ( object, objectMesh, x, y, z) {
+function rotate ( object, objectMesh, v) {
 	translate(object, objectMesh.position.x, objectMesh.position.y, objectMesh.position.z);
-	object.rotation.x += x;
-	object.rotation.y += y;
-	object.rotation.z += z;
+	object.rotation.x += v.x;
+	object.rotation.y += v.y;
+	object.rotation.z += v.z;
 	translate(object, -objectMesh.position.x, -objectMesh.position.y, -objectMesh.position.z);
 }
 
 //parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
 //console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
 
+for (int i = 0; i < joints.length; i++) {
+	acc[i].x = Math.random() / 10.0;
+	acc[i].y = Math.random() / 10.0;
+	acc[i].z = Math.random() / 10.0;
+}
+
 var render = function () {
 	requestAnimationFrame( render );
 
-	cube.rotation.x += 0.1;
-	cube.rotation.y += 0.1;
-
-	cylinder.rotation.z += 0.05;
+	for (var i = 0; i < joints.length; i++)
+		rotate(joints[i], jointMeshs[i], vel[i]);
 	
-	
-	//parent.rotation.z += 0.05;
-	//parent.rotation.x += 0.01;
-	rotate(RShoulder, RShoulderMesh, 0.1, 0, 0);
-	rotate(LShoulder, LShoulderMesh, 0.1, 0, 0);
-	rotate(RElbow, RElbowMesh, 0.2, 0, 0);
-	rotate(LElbow, LElbowMesh, 0.4, 0, 0);
+	for (var i = 0; i < joints.length; i++) {
+		vel[i] = vel[i].add(acc[i]);
+		// -0.01 -- 0.01
+		acc[i].x = ((object.rotation.x + PI) / (2 * PI) * 2 - 1) * -1;
+		acc[i].y = ((object.rotation.y + PI) / (2 * PI) * 2 - 1) * -1;
+		acc[i].z = ((object.rotation.z + PI) / (2 * PI) * 2 - 1) * -1;
+	}
 
 	parent.rotation.y += 0.01;
 	renderer.render(scene, camera);
