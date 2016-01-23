@@ -77,105 +77,105 @@ parent = new THREE.Object3D();
 scene.add( parent );
 
 //p1.limbs[0] 	// hip 
-var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new Geometry( jointGeomtry, material );
+var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new THREE.Mesh( jointGeomtry, material );
 hipJoint.add(hipJointMesh);
 parent.add( hipJoint );
 
-var LLegUpper = new THREE.Object3D();		hipJoint.add( LLegUpper ); 			var LLegUpperMesh = new Geometry( legGeometry, material );
+var LLegUpper = new THREE.Object3D();		hipJoint.add( LLegUpper ); 			var LLegUpperMesh = new THREE.Mesh( legGeometry, material );
 LLegUpperMesh.position.x = -10;
 LLegUpperMesh.position.y = -30;
 LLegUpperMesh.position.z = 0;
 LLegUpper.add(LLegUpperMesh);
 
-var RLegUpper = new THREE.Object3D();		hipJoint.add( RLegUpper );			var RLegUpperMesh = new Geometry( legGeometry, material );
+var RLegUpper = new THREE.Object3D();		hipJoint.add( RLegUpper );			var RLegUpperMesh = new THREE.Mesh( legGeometry, material );
 RLegUpperMesh.position.x = 10
 RLegUpperMesh.position.y = -30
 RLegUpperMesh.position.z = 0;
 RLegUpper.add(RLegUpperMesh);
 
-var LKnee = new THREE.Object3D();			LLegUpper.add( LKnee );				var LKneeMesh = new Geometry( jointGeometry, material );
+var LKnee = new THREE.Object3D();			LLegUpper.add( LKnee );				var LKneeMesh = new THREE.Mesh( jointGeometry, material );
 LKneeMesh.position.x = -10;
 LKneeMesh.position.y = -60;
 LKneeMesh.position.z = 0;
 LKnee.add(LKneeMesh);
 
-var RKnee = new THREE.Object3D();			RLegUpper.add( RKnee );				var RKneeMesh = new Geometry( jointGeometry, material );
+var RKnee = new THREE.Object3D();			RLegUpper.add( RKnee );				var RKneeMesh = new THREE.Mesh( jointGeometry, material );
 RKneeMesh.position.x = 10;
 RKneeMesh.position.y = -60;
 RKneeMesh.position.z = 0;
 RKnee.add(RKneeMesh);
 
-var LLegLower = new THREE.Object3D();		LKnee.add( LLegLower );				var LLegLowerMesh = new Geometry( legGeometry, material );
+var LLegLower = new THREE.Object3D();		LKnee.add( LLegLower );				var LLegLowerMesh = new THREE.Mesh( legGeometry, material );
 LLegLowerMesh.position.x = -10;
 LLegLowerMesh.position.y = -90;
 LLegLowerMesh.position.z = 0;
 LLegLower.add(LLegLowerMesh);
 
-var RLegLower = new THREE.Object3D(); 		RKnee.add( RLegLower );				var RLegLowerMesh = new Geometry( legGeometry, material );				
+var RLegLower = new THREE.Object3D(); 		RKnee.add( RLegLower );				var RLegLowerMesh = new THREE.Mesh( legGeometry, material );				
 RLegLowerMesh.position.x = 10;
 RLegLowerMesh.position.y = -90;
 RLegLowerMesh.position.z = 0;
 RLegLower.add(RLegLowerMesh);
 
 
-var Body = new THREE.Object3D();			hipJoint.add( Body );				var BodyMesh = new Geometry( bodyGeometry, material );
+var Body = new THREE.Object3D();			hipJoint.add( Body );				var BodyMesh = new THREE.Mesh( bodyGeometry, material );
 BodyMesh.position.x = 0;
 BodyMesh.position.y = 50;
 BodyMesh.position.z = 0;
 Body.add(BodyMesh);
 
 
-var LShoulder = new THREE.Object3D();		Body.add( LShoulder );				var LShoulderMesh = new Geometry( jointGeometry, material );
+var LShoulder = new THREE.Object3D();		Body.add( LShoulder );				var LShoulderMesh = new THREE.Mesh( jointGeometry, material );
 LShoulderMesh.position.x = -30;
 LShoulderMesh.position.y = 90;
 LShoulderMesh.position.z = 0;
 LShoulder.add(LShoulderMesh);
 
-var RShoulder = new THREE.Object3D();		Body.add( RShoulder );				var RShoulderMesh = new Geometry( jointGeometry, material );
+var RShoulder = new THREE.Object3D();		Body.add( RShoulder );				var RShoulderMesh = new THREE.Mesh( jointGeometry, material );
 RShoulderMesh.position.x = 30;
 RShoulderMesh.position.y = 90;
 RShoulderMesh.position.z = 0;
 RShoulder.add(RShoulderMesh);
 
 
-var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmShoulder );		var LArmUpperMesh = new Geometry( armGeometry, material );
+var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmShoulder );		var LArmUpperMesh = new THREE.Mesh( armGeometry, material );
 LArmUpperMesh.position.x = -30;
 LArmUpperMesh.position.y = 65;
 LArmUpperMesh.position.z = 0;
 LArmUpper.add(LArmUpperMesh);
 
-var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmShoulder );		var RArmUpperMesh = new Geometry( armGeometry, material );
+var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmShoulder );		var RArmUpperMesh = new THREE.Mesh( armGeometry, material );
 RArmUpperMesh.position.x = 30;
 RArmUpperMesh.position.y = 65;
 RArmUpperMesh.position.z = 0;
 RArmUpper.add(RArmUpperMesh);
 
-var LElbow = new THREE.Object3D();			LArmUpper.add( LElbow );			var LElbowMesh = new Geometry( jointGeometry, material );
+var LElbow = new THREE.Object3D();			LArmUpper.add( LElbow );			var LElbowMesh = new THREE.Mesh( jointGeometry, material );
 LElbowMesh.position.x = -30;
 LElbowMesh.position.y = 30;
 LElbowMesh.position.z = 0;
 LElbow.add(LElbowMesh);
 
-var RElbow = new THREE.Object3D();			RArmUpper.add( RElbow );			var RElbowMesh = new Geometry( jointGeometry, material );
+var RElbow = new THREE.Object3D();			RArmUpper.add( RElbow );			var RElbowMesh = new THREE.Mesh( jointGeometry, material );
 RElbowMesh.position.x = 30;
 RElbowMesh.position.y = 40;
 RElbowMesh.position.z = 0;
 RElbow.add(RElbowMesh);
 
-var LArmLower = new THREE.Object3D();		LElbow.add( LArmLower );			var LArmLowerMesh = new Geometry( armGeometry, material );
+var LArmLower = new THREE.Object3D();		LElbow.add( LArmLower );			var LArmLowerMesh = new THREE.Mesh( armGeometry, material );
 LArmLowerMesh.position.x = -30;
 LArmLowerMesh.position.y = 15;
 LArmLowerMesh.position.z = 0;
 LArmLower.add(LArmLowerMesh);
 
-var RArmLower = new THREE.Object3D();		RElbow.add( RArmLower );			var RArmLowerMesh = new Geometry( armGeometry, material );
+var RArmLower = new THREE.Object3D();		RElbow.add( RArmLower );			var RArmLowerMesh = new THREE.Mesh( armGeometry, material );
 RArmLowerMesh.position.x = 30;
 RArmLowerMesh.position.y = 15;
 RArmLowerMesh.position.z = 0;
 RArmLower.add(RArmLowerMesh);
 
 
-var Head = new THREE.Object3D();			Body.add( Head );					var HeadMesh = new Geometry( headGeometry, material );
+var Head = new THREE.Object3D();			Body.add( Head );					var HeadMesh = new THREE.Mesh( headGeometry, material );
 HeadMesh.position.x = 0;
 HeadMesh.position.y = 115;
 HeadMesh.position.z = 0;
