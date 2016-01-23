@@ -60,6 +60,9 @@ function libToThree( libObject ){
 		
 
 }
+var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+directionalLight.position.set( 0, 1, 0 );
+scene.add( directionalLight );
 
 
 // all the body parts
@@ -224,7 +227,8 @@ function rotate ( object, objectMesh, x, y, z) {
 }
 
 //parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
-console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
+//console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
+
 var render = function () {
 	requestAnimationFrame( render );
 
@@ -239,7 +243,7 @@ var render = function () {
 	rotate(RShoulder, RShoulderMesh, 0.1, 0, 0);
 	rotate(LShoulder, LShoulderMesh, 0.1, 0, 0);
 	rotate(RElbow, RElbowMesh, 0.2, 0, 0);
-	rotate(LElbow, LElbowMesh, 0.2, 0, 0);
+	rotate(LElbow, LElbowMesh, 0.4, 0, 0);
 
 	parent.rotation.y += 0.01;
 	renderer.render(scene, camera);
