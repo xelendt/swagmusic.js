@@ -215,6 +215,14 @@ function translate( object, x, y, z ){
 	object.translateZ(  z );
 }
 
+function rotate ( object, objectMesh, x, y, z) {
+	translate(object, objectMesh.position.x, objectMesh.position.y, objectMesh.position.z);
+	object.rotation.x += x;
+	object.rotation.y += y;
+	object.rotation.z += z;
+	translate(object, -objectMesh.position.x, -objectMesh.position.y, -objectMesh.position.z);
+}
+
 //parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
 console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
 var render = function () {
@@ -228,14 +236,10 @@ var render = function () {
 	
 	//parent.rotation.z += 0.05;
 	//parent.rotation.x += 0.01;
-
-	translate( RShoulder, RShoulderMesh.position.x, RShoulderMesh.position.y, RShoulderMesh.position.z);
-	RShoulder.rotation.x += 0.1;
-	translate( RShoulder, -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
-
-	translate( RElbow, RElbowMesh.position.x, RElbowMesh.position.y, RElbowMesh.position.z);
-	RElbow.rotation.x += 0.1;
-	translate( RElbow, -1*RElbowMesh.position.x, -1*RElbowMesh.position.y, -1*RElbowMesh.position.z);
+	rotate(RShoulder, RShoulderMesh, 0.1, 0, 0);
+	rotate(LShoulder, LShoulderMesh, 0.1, 0, 0);
+	rotate(RElbow, RElbowMesh, 0.2, 0, 0);
+	rotate(LElbow, LElbowMesh, 0.2, 0, 0);
 
 	parent.rotation.y += 0.01;
 	renderer.render(scene, camera);
