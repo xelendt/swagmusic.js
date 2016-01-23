@@ -1,14 +1,23 @@
-var song_url = "https://soundcloud.com/sssshawnnnn/hottodogu";
+var song_url = "https://soundcloud.com/monstaz-1/popcorn-funk-sneak-peak";
 var key = "client_id=35e6e06fe05ccb55d8d7b91c8390405d";
 var audio;
 var resolve_url = "https://api.soundcloud.com/resolve.json?url=" + song_url + "&" + key
 
 var stream_url;
 
+var curFreqState = {
+	_freq = 0,
+	setter: function(val) {
+		this._freq = val;
+	},
+	getter: function() {
+		return _freq;
+	}
+}
 
 var chartContext = $("#myChart").get(0).getContext("2d");
 var labels = [];
-for (var i = 0; i < 8; i++)
+for (var i = 0; i < 128; i++)
 	labels.push("");
 window.myData = {
 	labels: labels,
@@ -18,14 +27,14 @@ window.myData = {
 		data: []
 	}],
 	update: function(index, newData) {
-		for (var i = 0; i < 1024; i += 128) {
-			this.datasets[index].data[i / 128] = newData[i];
+		for (var i = 0; i < 1024; i += 8) {
+			this.datasets[index].data[i / 8] = newData[i];
 		}	
 		//console.log(this.datasets[index].data);
 	}
 };
 var chart = new Chart(chartContext);	
-chart.Bar(myData, optionsAnimation);
+chart.Line(myData, optionsAnimation);
 console.log(myData);
 
 
@@ -86,10 +95,11 @@ function frameLooper(){
 		}
 	}
 	freq = max_ind * 44100 / 1024;
-
-	//console.log(freq);
+	console.log(freq);
 	myData.update(0, fbc_array);
-	chart.Bar(myData, optionsAnimation);
+	chart.Line(myData, optionsNoAnimation);
+	
+	curFreqState.setter(freq);
 }
 
 
@@ -102,7 +112,9 @@ var optionsAnimation = {
 	//Number - The value jump in the hard coded scale
 	scaleStepWidth : 300,
 	//Number - The scale starting value
-	scaleStartValue : 0
+	scaleStartValue : 0,
+	scaleShowGridLines: false,
+	pointDot : false
 }
 
 // Not sure why the scaleOverride isn't working...
@@ -116,7 +128,9 @@ var optionsNoAnimation = {
 	//Number - The value jump in the hard coded scale
 	scaleStepWidth : 300,
 	//Number - The scale starting value
-	scaleStartValue : 0
+	scaleStartValue : 0,
+	scaleShowGridLines: false,
+	pointDot : false
 }
 
 
