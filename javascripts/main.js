@@ -111,15 +111,15 @@ parent.add( hipJoint );
 hipJoint.add(hipJointMesh);
 
 var LHipJoint = new THREE.Object3D();		hipJoint.add(LHipJoint);			var LHipJointMesh = new THREE.Mesh( jointGeometry, material );
-LHipJoint.position.x = -10;
-LHipJoint.position.y = 0;
-LHipJoint.position.z = 0;
+LHipJointMesh.position.x = -10;
+LHipJointMesh.position.y = 0;
+LHipJointMesh.position.z = 0;
 LHipJoint.add(LHipJointMesh);
 
 var RHipJoint = new THREE.Object3D();		hipJoint.add(RHipJoint);			var RHipJointMesh = new THREE.Mesh( jointGeometry, material );
-RHipJoint.position.x = 10;
-RHipJoint.position.y = 0;
-RHipJoint.position.z = 0;
+RHipJointMesh.position.x = 10;
+RHipJointMesh.position.y = 0;
+RHipJointMesh.position.z = 0;
 RHipJoint.add(RHipJointMesh);
 
 var LLegUpper = new THREE.Object3D();		LHipJoint.add( LLegUpper ); 		var LLegUpperMesh = new THREE.Mesh( legGeometry, material );
@@ -129,8 +129,8 @@ LLegUpperMesh.position.z = 0;
 LLegUpper.add(LLegUpperMesh);
 
 var RLegUpper = new THREE.Object3D();		RHipJoint.add( RLegUpper );			var RLegUpperMesh = new THREE.Mesh( legGeometry, material );
-RLegUpperMesh.position.x = 10
-RLegUpperMesh.position.y = -30
+RLegUpperMesh.position.x = 10;
+RLegUpperMesh.position.y = -30;
 RLegUpperMesh.position.z = 0;
 RLegUpper.add(RLegUpperMesh);
 
