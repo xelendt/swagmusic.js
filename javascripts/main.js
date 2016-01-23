@@ -360,7 +360,8 @@ Head.add(HeadMesh);
 HeadMesh.castShadow = true;
 HeadMesh.receiveShadow = true;
 
-
+var HIPJOINT = 0; var UPPERHIPJOINT =1; var LHIPJOINT = 2; var RHIPJOINT = 3;
+var LKNEE = 4; var RKNEE = 5; var LSHOULDER = 6; var RSHOULDER = 7; var LELBOW = 8; var RELBOW = 9;
 var joints = [hipJoint, upperHipJoint, LHipJoint, RHipJoint, LKnee, RKnee, LShoulder, RShoulder, LElbow, RElbow];
 var jointMeshs = [hipJointMesh, upperHipJointMesh, LHipJointMesh, RHipJointMesh, LKneeMesh, RKneeMesh, LShoulderMesh, RShoulderMesh, LElbowMesh, RElbowMesh];
 var acc = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0)];
@@ -418,24 +419,67 @@ var initTime = Date.now();
 var nat = 2.718;
 
 parent.rotation.y += PI/4;
-var render = function (freq) {
+var render = function () {
 	
+    var freq = curFreqState.getter();
+
     requestAnimationFrame( render );
     
     
     var timelapsed = (Date.now() - initTime) / 100;
     //if (timelapsed > 100)
         //return;
-	
+	/***
     for (var i = 0; i < joints.length; i++) {
 	   //vel[i].x += random() / 10 - 0.05;
 	   //vel[i].y += random() / 10 - 0.05;
 	   //vel[i].z += random() / 10 - 0.05;
-       vel[i].x += freq / 10000;
-       vel[i].y += freq / 10000;
-       vel[i].z += freq / 10000;
+       vel[i].x += freq / 100000;
+       vel[i].y += freq / 100000;
+       vel[i].z += freq / 100000;
     }
-
+    ***/
+    
+    var reduced = freq / 100000;
+    
+    if (freq < 0)  {
+        //console.log('case 1');
+        vel[HIPJOINT].x += reduced; vel[HIPJOINT].y += reduced; vel[HIPJOINT].z += reduced;
+    }
+    if (freq >= 0) {
+        //console.log('case 2');
+        vel[RHIPJOINT].x += reduced; vel[RHIPJOINT].y += reduced; vel[RHIPJOINT].z += reduced;
+        vel[LHIPJOINT].x -= reduced; vel[LHIPJOINT].y -= reduced; vel[LHIPJOINT].z -= reduced;
+    }
+    if (freq >= 100) {
+        //console.log('case 3');
+        vel[RKNEE].x -= reduced; vel[RKNEE].y -= reduced; vel[RKNEE].z -= reduced;
+        vel[LKNEE].x += reduced; vel[LKNEE].y += reduced; vel[LKNEE].z += reduced;
+        vel[UPPERHIPJOINT].x += (Math.random() * 2 - 1) * 0.5 * reduced;
+        vel[UPPERHIPJOINT].y += (Math.random() * 2 - 1) * 0.5 * reduced;
+        vel[UPPERHIPJOINT].z += (Math.random() * 2 - 1) * 0.5 * reduced;
+    }
+    if (freq >= 200) {
+        //console.log('case 4');
+        vel[RSHOULDER].x += reduced; vel[RSHOULDER].y += reduced; vel[RSHOULDER].z += reduced;
+        vel[LSHOULDER].x -= reduced; vel[LSHOULDER].y -= reduced; vel[LSHOULDER].z -= reduced;
+    }
+    if (freq >= 400) {
+        //console.log('case 5');
+        vel[RELBOW].x -= reduced; vel[RELBOW].y -= reduced; vel[RELBOW].z -= reduced;
+        vel[LELBOW].x += reduced; vel[LELBOW].y += reduced; vel[LELBOW].z += reduced;
+    }
+    if (freq >= 1600) {
+        //console.log('case 6');
+        vel[RKNEE].x += reduced * 3; vel[RSHOULDER].y += reduced * 3; vel[LHIPJOINT].z += reduced * 3;
+        vel[RELBOW].x -= reduced * 3; vel[LKNEE].y -= reduced * 3; vel[HIPJOINT].z -= reduced * 3;
+    }
+    if (freq >= 3200) {
+        //console.log('case 7');
+        vel[RELBOW].x += reduced * 7; vel[LSHOULDER].y += reduced * 7; vel[HIPJOINT].z += reduced * 7;
+        vel[RKNEE].x -= reduced * 7; vel[LHIPJOINT].y -= reduced * 7; vel[LELBOW].z -= reduced * 7;
+    }
+    
     // designate freqeuncies for each limb
 
     // legs
@@ -480,5 +524,5 @@ var render = function (freq) {
     //camera.position.x += 5;
 };
 
-render(300);
+render();
 
