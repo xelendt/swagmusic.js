@@ -202,31 +202,6 @@ var jointGeometry = new THREE.SphereGeometry( 10, 10, 10 );
 parent = new THREE.Object3D();
 scene.add( parent );
 
-var pivot1 = new THREE.Object3D();
-var pivot2 = new THREE.Object3D();
-var pivot3 = new THREE.Object3D();
-
-pivot1.rotation.z = 0;
-pivot2.rotation.z = 2 * Math.PI / 3;
-pivot3.rotation.z = 4 * Math.PI / 3;
-
-parent.add( pivot1 );
-parent.add( pivot2 );
-parent.add( pivot3 );
-
-// mesh
-var mesh1 = new THREE.Mesh( geometry, material );
-var mesh2 = new THREE.Mesh( geometry, material );
-var mesh3 = new THREE.Mesh( geometry, material );
-
-mesh1.position.y = 1;
-mesh2.position.y = 1;
-mesh3.position.y = 1;
-
-pivot1.add( mesh1 );
-pivot2.add( mesh2 );
-pivot3.add( mesh3 );
-
 
 //p1.limbs[0] 	// hip 
 var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new THREE.Mesh( jointGeometry, material );
@@ -443,7 +418,7 @@ var initTime = Date.now();
 var nat = 2.718;
 
 parent.rotation.y += PI/4;
-var render = function () {
+var render = function (freq) {
 	
     requestAnimationFrame( render );
     
@@ -453,9 +428,12 @@ var render = function () {
         //return;
 	
     for (var i = 0; i < joints.length; i++) {
-	   vel[i].x += random() / 10 - 0.05;
-	   vel[i].y += random() / 10 - 0.05;
-	   vel[i].z += random() / 10 - 0.05;
+	   //vel[i].x += random() / 10 - 0.05;
+	   //vel[i].y += random() / 10 - 0.05;
+	   //vel[i].z += random() / 10 - 0.05;
+       vel[i].x += freq / 10000;
+       vel[i].y += freq / 10000;
+       vel[i].z += freq / 10000;
     }
 
     // designate freqeuncies for each limb
@@ -502,5 +480,5 @@ var render = function () {
     //camera.position.x += 5;
 };
 
-render();
+render(300);
 
