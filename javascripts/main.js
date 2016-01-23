@@ -13,7 +13,7 @@ var cylinder = new THREE.Mesh( cylindergeo, material );
 //    scene.add(cylinder);
 //scene.add( cube );
 
-camera.position.z = 5;
+camera.position.z = 500;
 
 // parent
 /*parent = new THREE.Object3D();
@@ -76,10 +76,37 @@ var jointGeometry = new THREE.SphereGeometry( 10, 20, 20 );
 parent = new THREE.Object3D();
 scene.add( parent );
 
+var pivot1 = new THREE.Object3D();
+var pivot2 = new THREE.Object3D();
+var pivot3 = new THREE.Object3D();
+
+pivot1.rotation.z = 0;
+pivot2.rotation.z = 2 * Math.PI / 3;
+pivot3.rotation.z = 4 * Math.PI / 3;
+
+parent.add( pivot1 );
+parent.add( pivot2 );
+parent.add( pivot3 );
+
+// mesh
+var mesh1 = new THREE.Mesh( geometry, material );
+var mesh2 = new THREE.Mesh( geometry, material );
+var mesh3 = new THREE.Mesh( geometry, material );
+
+mesh1.position.y = 1;
+mesh2.position.y = 1;
+mesh3.position.y = 1;
+
+pivot1.add( mesh1 );
+pivot2.add( mesh2 );
+pivot3.add( mesh3 );
+
+
 //p1.limbs[0] 	// hip 
-var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new THREE.Mesh( jointGeomtry, material );
-hipJoint.add(hipJointMesh);
+var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new THREE.Mesh( jointGeometry, material );
 parent.add( hipJoint );
+hipJoint.add(hipJointMesh);
+
 
 var LLegUpper = new THREE.Object3D();		hipJoint.add( LLegUpper ); 			var LLegUpperMesh = new THREE.Mesh( legGeometry, material );
 LLegUpperMesh.position.x = -10;
@@ -137,14 +164,13 @@ RShoulderMesh.position.y = 90;
 RShoulderMesh.position.z = 0;
 RShoulder.add(RShoulderMesh);
 
-
-var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmShoulder );		var LArmUpperMesh = new THREE.Mesh( armGeometry, material );
+var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmUpper );		var LArmUpperMesh = new THREE.Mesh( armGeometry, material );
 LArmUpperMesh.position.x = -30;
 LArmUpperMesh.position.y = 65;
 LArmUpperMesh.position.z = 0;
 LArmUpper.add(LArmUpperMesh);
 
-var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmShoulder );		var RArmUpperMesh = new THREE.Mesh( armGeometry, material );
+var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmUpper );		var RArmUpperMesh = new THREE.Mesh( armGeometry, material );
 RArmUpperMesh.position.x = 30;
 RArmUpperMesh.position.y = 65;
 RArmUpperMesh.position.z = 0;
@@ -182,21 +208,36 @@ HeadMesh.position.z = 0;
 Head.add(HeadMesh);
 
 
+function translate( object, x, y, z ){
 
+	object.translateX(  x );
+	object.translateY(  y );
+	object.translateZ(  z );
+}
 
+//parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
+console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
 var render = function () {
 	requestAnimationFrame( render );
 
 	cube.rotation.x += 0.1;
 	cube.rotation.y += 0.1;
-	
+
 	cylinder.rotation.z += 0.05;
 	
-	/*
-	parent.rotation.z += 0.05;
-	parent.rotation.x += 0.01;
-	*/
+	
+	//parent.rotation.z += 0.05;
+	//parent.rotation.x += 0.01;
 
+	translate( RShoulder, RShoulderMesh.position.x, RShoulderMesh.position.y, RShoulderMesh.position.z);
+	RShoulder.rotation.x += 0.1;
+	translate( RShoulder, -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
+
+	translate( RElbow, RElbowMesh.position.x, RElbowMesh.position.y, RElbowMesh.position.z);
+	RElbow.rotation.x += 0.1;
+	translate( RElbow, -1*RElbowMesh.position.x, -1*RElbowMesh.position.y, -1*RElbowMesh.position.z);
+
+	parent.rotation.y += 0.01;
 	renderer.render(scene, camera);
 };
 
