@@ -84,22 +84,22 @@ var LLegUpper = new THREE.Object3D();		hipJoint.add( LLegUpper ); 			var LLegUpp
 var RLegUpper = new THREE.Object3D();		hipJoint.add( RLegUpper );			var RLegUpperMesh = new Geometry( legGeometry, material );
 var LKnee = new THREE.Object3D();			LLegUpper.add( LKnee );				var LKneeMesh = new Geometry( jointGeometry, material );
 var RKnee = new THREE.Object3D();			RLegUpper.add( RKnee );				var RKneeMesh = new Geometry( jointGeometry, material );
-var LLegLower = new THREE.Object3D();		LKnee.add( LLegLower );				var RKneeMesh = new Geometry( jointGeometry, material );
-var RLegLower = new THREE.Object3D(); 		RKnee.add( RLegLower );				var RKneeMesh = new Geometry( jointGeometry, material );
+var LLegLower = new THREE.Object3D();		LKnee.add( LLegLower );				var LLegLowerMesh = new Geometry( legGeometry, material );
+var RLegLower = new THREE.Object3D(); 		RKnee.add( RLegLower );				var RLegLowerMesh = new Geometry( legGeometry, material );				
 
-var Body = new THREE.Object3D();			hipJoint.add( Body );
+var Body = new THREE.Object3D();			hipJoint.add( Body );				var BodyMesh = new Geometry( bodyGeometry, material );
 
-var LShoulder = new THREE.Object3D();		Body.add( LShoulder );
-var RShoulder = new THREE.Object3D();		Body.add( RShoulder );
+var LShoulder = new THREE.Object3D();		Body.add( LShoulder );				var LShoulderMesh = new Geometry( jointGeometry, material );
+var RShoulder = new THREE.Object3D();		Body.add( RShoulder );				var RShoulderMesh = new Geometry( jointGeometry, material );
 
-var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmShoulder );
-var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmShoulder );
-var LElbow = new THREE.Object3D();			LArmUpper.add( LElbow );	
-var RElbow = new THREE.Object3D();			RArmUpper.add( RElbow );
-var LArmLower = new THREE.Object3D();		LElbow.add( LArmLower );
-var RArmLower = new THREE.Object3D();		RElbow.add( RArmLower );
+var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmShoulder );		var LArmUpperMesh = new Geometry( armGeometry, material );
+var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmShoulder );		var RArmUpperMesh = new Geometry( armGeometry, material );
+var LElbow = new THREE.Object3D();			LArmUpper.add( LElbow );			var LElbowMesh = new Geometry( jointGeometry, material );
+var RElbow = new THREE.Object3D();			RArmUpper.add( RElbow );			var RElbowMesh = new Geometry( jointGeometry, material );
+var LArmLower = new THREE.Object3D();		LElbow.add( LArmLower );			var LArmLowerMesh = new Geometry( armGeometry, material );
+var RArmLower = new THREE.Object3D();		RElbow.add( RArmLower );			var RArmLowerMesh = new Geometry( armGeometry, material );
 
-var Head = new THREE.Object3D();			Body.add( Head );
+var Head = new THREE.Object3D();			Body.add( Head );					var HeadMesh = new Geometry( headGeometry, material );
 
 
 
