@@ -1,289 +1,139 @@
-var Vector = function (x, y, z) {
+function multiplyPoint (m1, point) {
+	var m2 = [point.x, point.y, point.z];
+	var ret = [];
+
+	for (var i = 0; i < m1.length; i++) {
+		var coord = 0.0;
+		for (var j = 0; j < m1[0].length; j++) {
+			coord += m1[i][j] * m2[j];
+		}
+		ret.push(coord);
+	}
+	return new Point(ret[0], ret[1], ret[2]);
+}
+
+function sin (angle) {
+	return Math.sin(angle);
+}
+ 	
+function cos (angle) {
+	return Math.cos(angle);
+}
+
+
+var Point = function (x, y, z) {
 	return {
 		x: x, 
 		y: y, 
 		z: z,
 
 		subtract: function (p) {
-			return new Vector(x - p.x, y - p.y, z - p.z);
+			return new Point(x - p.x, y - p.y, z - p.z);
 		},
 		add: function (p) {
-			return new Vector(x + p.x, y + p.y, z + p.z);
+			return new Point(x + p.x, y + p.y, z + p.z);
 		}
 	};
 };
 
-var PI = 3.1415926;
+var Sphere = function (radius, point) {
+	return {
+		radius:radius, 
+		point:point,
+		child: [],
 
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+		// precondition: angles in radians
+		applyTransform: function (refPoint, x, y, z) {
+			var matrix = [[cos(y)*cos(z), cos(z)*sin(x)*sin(y) - cos(x)*sin(z), cos(x)*cos(z)*sin(y) + sin(x)*sin(z)],
+						  [cos(y)*sin(z), cos(x)*cos(z) + sin(x)*sin(y)*sin(z),-cos(z)*sin(x) + cos(x)*sin(y)*sin(z)],
+						  [-sin(y)      , cos(y)*sin(x)                       , cos(x)*cos(y)                       ]];
+			console.log(point.x + " " + point.y + " " + point.z);
+			point = refPoint.add(multiplyPoint(matrix, point.subtract(refPoint)));
+			console.log(point.x + " " + point.y + " " + point.z);
+		}
+	};
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-var cylindergeo = new THREE.CylinderGeometry(1, 1, 3, 8, 1, false, 0);
-var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-var cube = new THREE.Mesh( geometry, material );
-var cylinder = new THREE.Mesh( cylindergeo, material );
-//    scene.add(cylinder);
-//scene.add( cube );
-
-camera.position.z = 500;
-
-// parent
-/*parent = new THREE.Object3D();
-scene.add( parent );
-
-// pivots
-var pivot1 = new THREE.Object3D();
-var pivot2 = new THREE.Object3D();
-var pivot3 = new THREE.Object3D();
-
-pivot1.rotation.z = 0;
-pivot2.rotation.z = 2 * Math.PI / 3;
-pivot3.rotation.z = 4 * Math.PI / 3;
-
-parent.add( pivot1 );
-parent.add( pivot2 );
-parent.add( pivot3 );
-
-// mesh
-var mesh1 = new THREE.Mesh( geometry, material );
-var mesh2 = new THREE.Mesh( geometry, material );
-var mesh3 = new THREE.Mesh( geometry, material );
-
-mesh1.position.y = 1;
-mesh2.position.y = 1;
-mesh3.position.y = 1;
-
-pivot1.add( mesh1 );
-pivot2.add( mesh2 );
-pivot3.add( mesh3 );
-*/
-
-// steps for success
-// 1) create the parent
-// 2) create the child
-// 3) rotate the objects
-// 4) add childs
-// 5) create meshes
-// 6) translate the objects
-// 7) add meshes to the pivots
-
-function libToThree( libObject ){
-
-		
-
-}
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-directionalLight.position.set( 0, 1, 0 );
-scene.add( directionalLight );
-
-
-// all the body parts
-var legGeometry = new THREE.CylinderGeometry( 10, 10, 60, 10, 1, false );		
-var armGeometry = new THREE.CylinderGeometry( 10, 10, 50, 10, 1, false );		
-var bodyGeometry = new THREE.CylinderGeometry( 20, 20, 100, 10, 1, false ); 
-var headGeometry = new THREE.SphereGeometry( 15, 20, 20 ); 
-var jointGeometry = new THREE.SphereGeometry( 10, 20, 20 ); 
-
-
-// all the body geometry
-//var p1 = new Person();
-
-parent = new THREE.Object3D();
-scene.add( parent );
-
-var pivot1 = new THREE.Object3D();
-var pivot2 = new THREE.Object3D();
-var pivot3 = new THREE.Object3D();
-
-pivot1.rotation.z = 0;
-pivot2.rotation.z = 2 * Math.PI / 3;
-pivot3.rotation.z = 4 * Math.PI / 3;
-
-parent.add( pivot1 );
-parent.add( pivot2 );
-parent.add( pivot3 );
-
-// mesh
-var mesh1 = new THREE.Mesh( geometry, material );
-var mesh2 = new THREE.Mesh( geometry, material );
-var mesh3 = new THREE.Mesh( geometry, material );
-
-mesh1.position.y = 1;
-mesh2.position.y = 1;
-mesh3.position.y = 1;
-
-pivot1.add( mesh1 );
-pivot2.add( mesh2 );
-pivot3.add( mesh3 );
-
-
-//p1.limbs[0] 	// hip 
-var hipJoint = new THREE.Object3D(); 											var hipJointMesh = new THREE.Mesh( jointGeometry, material );
-parent.add( hipJoint );
-hipJoint.add(hipJointMesh);
-
-var LHipJoint = new THREE.Object3D();		hipJoint.add(LHipJoint);			var LHipJointMesh = new THREE.Mesh( jointGeometry, material );
-LHipJointMesh.position.x = -10;
-LHipJointMesh.position.y = 0;
-LHipJointMesh.position.z = 0;
-LHipJoint.add(LHipJointMesh);
-
-var RHipJoint = new THREE.Object3D();		hipJoint.add(RHipJoint);			var RHipJointMesh = new THREE.Mesh( jointGeometry, material );
-RHipJointMesh.position.x = 10;
-RHipJointMesh.position.y = 0;
-RHipJointMesh.position.z = 0;
-RHipJoint.add(RHipJointMesh);
-
-var LLegUpper = new THREE.Object3D();		LHipJoint.add( LLegUpper ); 		var LLegUpperMesh = new THREE.Mesh( legGeometry, material );
-LLegUpperMesh.position.x = -10;
-LLegUpperMesh.position.y = -30;
-LLegUpperMesh.position.z = 0;
-LLegUpper.add(LLegUpperMesh);
-
-var RLegUpper = new THREE.Object3D();		RHipJoint.add( RLegUpper );			var RLegUpperMesh = new THREE.Mesh( legGeometry, material );
-RLegUpperMesh.position.x = 10;
-RLegUpperMesh.position.y = -30;
-RLegUpperMesh.position.z = 0;
-RLegUpper.add(RLegUpperMesh);
-
-var LKnee = new THREE.Object3D();			LLegUpper.add( LKnee );				var LKneeMesh = new THREE.Mesh( jointGeometry, material );
-LKneeMesh.position.x = -10;
-LKneeMesh.position.y = -60;
-LKneeMesh.position.z = 0;
-LKnee.add(LKneeMesh);
-
-var RKnee = new THREE.Object3D();			RLegUpper.add( RKnee );				var RKneeMesh = new THREE.Mesh( jointGeometry, material );
-RKneeMesh.position.x = 10;
-RKneeMesh.position.y = -60;
-RKneeMesh.position.z = 0;
-RKnee.add(RKneeMesh);
-
-var LLegLower = new THREE.Object3D();		LKnee.add( LLegLower );				var LLegLowerMesh = new THREE.Mesh( legGeometry, material );
-LLegLowerMesh.position.x = -10;
-LLegLowerMesh.position.y = -90;
-LLegLowerMesh.position.z = 0;
-LLegLower.add(LLegLowerMesh);
-
-var RLegLower = new THREE.Object3D(); 		RKnee.add( RLegLower );				var RLegLowerMesh = new THREE.Mesh( legGeometry, material );				
-RLegLowerMesh.position.x = 10;
-RLegLowerMesh.position.y = -90;
-RLegLowerMesh.position.z = 0;
-RLegLower.add(RLegLowerMesh);
-
-
-var Body = new THREE.Object3D();			hipJoint.add( Body );				var BodyMesh = new THREE.Mesh( bodyGeometry, material );
-BodyMesh.position.x = 0;
-BodyMesh.position.y = 50;
-BodyMesh.position.z = 0;
-Body.add(BodyMesh);
-
-
-var LShoulder = new THREE.Object3D();		Body.add( LShoulder );				var LShoulderMesh = new THREE.Mesh( jointGeometry, material );
-LShoulderMesh.position.x = -30;
-LShoulderMesh.position.y = 90;
-LShoulderMesh.position.z = 0;
-LShoulder.add(LShoulderMesh);
-
-var RShoulder = new THREE.Object3D();		Body.add( RShoulder );				var RShoulderMesh = new THREE.Mesh( jointGeometry, material );
-RShoulderMesh.position.x = 30;
-RShoulderMesh.position.y = 90;
-RShoulderMesh.position.z = 0;
-RShoulder.add(RShoulderMesh);
-
-var LArmUpper = new THREE.Object3D();		LShoulder.add( LArmUpper );		var LArmUpperMesh = new THREE.Mesh( armGeometry, material );
-LArmUpperMesh.position.x = -30;
-LArmUpperMesh.position.y = 65;
-LArmUpperMesh.position.z = 0;
-LArmUpper.add(LArmUpperMesh);
-
-var RArmUpper = new THREE.Object3D();		RShoulder.add( RArmUpper );		var RArmUpperMesh = new THREE.Mesh( armGeometry, material );
-RArmUpperMesh.position.x = 30;
-RArmUpperMesh.position.y = 65;
-RArmUpperMesh.position.z = 0;
-RArmUpper.add(RArmUpperMesh);
-
-var LElbow = new THREE.Object3D();			LArmUpper.add( LElbow );			var LElbowMesh = new THREE.Mesh( jointGeometry, material );
-LElbowMesh.position.x = -30;
-LElbowMesh.position.y = 30;
-LElbowMesh.position.z = 0;
-LElbow.add(LElbowMesh);
-
-var RElbow = new THREE.Object3D();			RArmUpper.add( RElbow );			var RElbowMesh = new THREE.Mesh( jointGeometry, material );
-RElbowMesh.position.x = 30;
-RElbowMesh.position.y = 40;
-RElbowMesh.position.z = 0;
-RElbow.add(RElbowMesh);
-
-var LArmLower = new THREE.Object3D();		LElbow.add( LArmLower );			var LArmLowerMesh = new THREE.Mesh( armGeometry, material );
-LArmLowerMesh.position.x = -30;
-LArmLowerMesh.position.y = 15;
-LArmLowerMesh.position.z = 0;
-LArmLower.add(LArmLowerMesh);
-
-var RArmLower = new THREE.Object3D();		RElbow.add( RArmLower );			var RArmLowerMesh = new THREE.Mesh( armGeometry, material );
-RArmLowerMesh.position.x = 30;
-RArmLowerMesh.position.y = 15;
-RArmLowerMesh.position.z = 0;
-RArmLower.add(RArmLowerMesh);
-
-
-var Head = new THREE.Object3D();			Body.add( Head );					var HeadMesh = new THREE.Mesh( headGeometry, material );
-HeadMesh.position.x = 0;
-HeadMesh.position.y = 115;
-HeadMesh.position.z = 0;
-Head.add(HeadMesh);
-
-var joints = [hipJoint, LHipJoint, RHipJoint, LKnee, RKnee, LShoulder, RShoulder, LElbow, RElbow];
-var jointMeshs = [hipJointMesh, LHipJointMesh, RHipJointMesh, LKneeMesh, RKneeMesh, LShoulderMesh, RShoulderMesh, LElbowMesh, RElbowMesh];
-var acc = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0)];
-var vel = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0)];
-
-function translate( object, x, y, z ){
-
-	object.translateX(  x );
-	object.translateY(  y );
-	object.translateZ(  z );
-}
-
-function rotate ( object, objectMesh, v) {
-	translate(object, objectMesh.position.x, objectMesh.position.y, objectMesh.position.z);
-	object.rotation.x += v.x;
-	object.rotation.y += v.y;
-	object.rotation.z += v.z;
-	translate(object, -objectMesh.position.x, -objectMesh.position.y, -objectMesh.position.z);
-}
-
-//parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
-//console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
-
-for (int i = 0; i < joints.length; i++) {
-	acc[i].x = Math.random() / 10.0;
-	acc[i].y = Math.random() / 10.0;
-	acc[i].z = Math.random() / 10.0;
-}
-
-var render = function () {
-	requestAnimationFrame( render );
-
-	for (var i = 0; i < joints.length; i++)
-		rotate(joints[i], jointMeshs[i], vel[i]);
-	
-	for (var i = 0; i < joints.length; i++) {
-		vel[i] = vel[i].add(acc[i]);
-		// -0.01 -- 0.01
-		acc[i].x = ((object.rotation.x + PI) / (2 * PI) * 2 - 1) * -1;
-		acc[i].y = ((object.rotation.y + PI) / (2 * PI) * 2 - 1) * -1;
-		acc[i].z = ((object.rotation.z + PI) / (2 * PI) * 2 - 1) * -1;
-	}
-
-	parent.rotation.y += 0.01;
-	renderer.render(scene, camera);
 };
 
-render();
+var Cylinder = function (radius, startPoint, endPoint) {
+	return {
+		radius: radius,
+		startPoint: startPoint,
+		endPoint: endPoint,
+		child: [],
 
+		// precondition: angles in radius
+		applyTransform: function (refPoint, x, y, z) {
+			var matrix = [[cos(y)*cos(z), cos(z)*sin(x)*sin(y) - cos(x)*sin(z), cos(x)*cos(z)*sin(y) + sin(x)*sin(z)],
+						  [cos(y)*sin(z), cos(x)*cos(z) + sin(x)*sin(y)*sin(z),-cos(z)*sin(x) + cos(x)*sin(y)*sin(z)],
+						  [-sin(y)      , cos(y)*sin(x)                       , cos(x)*cos(y)                       ]];
+			startPoint = startPoint.add(multiplyPoint(matrix, startPoint.subtract(refPoint)));
+			endPoint = endPoint.add(multiplyPoint(matrix, endPoint.subtract(refPoint)));
+		}
+	}
+};
+// head = 30 height
+// body = 100 height, 40 width;
+// upper-leg = 60 height, 20 width;
+// lower-leg = 60 height, 20 width;
+// upper-arm = 50 
+var Person = function () {
+	var head = new Sphere(15, new Point(0, 115, 0));
+	var body = new Cylinder(20, new Point(0, 0, 0), new Point(0, 100, 0));
+	var hip = new Sphere(0, new Point(0, 0, 0));
+	
+	var leftUpperLeg = new Cylinder(10, new Point(-10, 0, 0), new Point(-10, -60, 0));
+	var rightUpperLeg = new Cylinder(10, new Point( 10, 0, 0), new Point( 10, -60, 0));
+	
+	var leftKnee = new Sphere(0, new Point(-10, -60, 0));
+	var rightKnee = new Sphere(0, new Point(-10, 60, 0));
+
+	var leftLowerLeg = new Cylinder(10, new Point(-10, 60, 0), new Point(-10, 120, 0));
+	var rightLowerLeg = new Cylinder(10, new Point( 10, 60, 0), new Point( 10, 120, 0));
+
+	var leftShoulder = new Sphere(0, new Point(-20, 90, 0));
+	var rightShoulder = new Sphere(0, new Point(20, 90, 0));
+
+	var leftUpperArm = new Cylinder(10, new Point(-20, 90, 0), new Point(-70, 90, 0));
+	var rightUpperArm = new Cylinder(10, new Point(20, 90, 0), new Point(70, 90, 0));
+
+	var leftElbow = new Sphere(0, new Point(-70, 90, 0));
+	var rightElbow = new Sphere(0, new Point(70, 90, 0));
+
+	var leftLowerArm = new Cylinder(10, new Point(-70, 90, 0), new Point(-120, 90, 0));
+	var rightLowerArm = new Cylinder(10, new Point(70, 90, 0), new Point(120, 90, 0));
+
+	hip.child.push(leftUpperLeg);
+	hip.child.push(rightUpperLeg);
+	hip.child.push(body);
+
+	leftUpperLeg.child.push(leftKnee);
+	rightUpperLeg.child.push(rightKnee);
+
+	leftKnee.child.push(leftLowerLeg);
+	rightKnee.child.push(rightLowerLeg);
+
+	body.child.push(leftShoulder);
+	body.child.push(rightShoulder);
+	body.child.push(head);
+
+	leftShoulder.child.push(leftUpperArm);
+	rightShoulder.child.push(rightUpperArm);
+
+	leftUpperArm.child.push(leftElbow);
+	rightUpperArm.child.push(rightElbow);
+
+	leftElbow.child.push(leftLowerArm);
+	rightElbow.child.push(rightLowerArm);
+	return {
+		limbs: [hip, leftKnee, rightKnee, leftShoulder, rightShoulder, leftElbow, rightElbow]
+	}
+};
+
+// precondition: angles in radians
+var applyPersonTransform = function (refPoint, curr, x, y, z) {
+	curr.applyTransform(refPoint, x, y, z);
+	curr.child.forEach(function (next) {
+  		applyPersonTransform(refPoint, next, x, y, z);
+	});
+}
