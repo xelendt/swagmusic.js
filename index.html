@@ -14,8 +14,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
  		<script src="./javascripts/OBJLoader.js"></script>
-       
-        
+
+
         <script type="x-shader/x-vertex" id="vertexShader">
 
 			varying vec3 vWorldPosition;
@@ -51,7 +51,10 @@
 		<div id="mp3_player">
         <div id="audio_box"></div>
 	    </div>
-	    <canvas id="myChart" ></canvas>
+
+	    <input type="text" placeholder="URL" name="url" id="url"/>
+	    <input type="button" value="Submit" onclick="change()"/>
+	    <canvas id="myChart" style="height:200px;width:300px"></canvas>
 		<script src="./app.js"></script>
 		<script src="./javascripts/main.js"></script>
 		<script src="./javascripts/customlib.js"></script>
