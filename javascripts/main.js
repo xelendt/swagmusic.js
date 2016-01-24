@@ -195,6 +195,39 @@ var bodyGeometry = new THREE.CylinderGeometry( 20, 20, 100, 10, 1, false );
 var headGeometry = new THREE.SphereGeometry( 15, 10, 10 ); 
 var jointGeometry = new THREE.SphereGeometry( 10, 10, 10 ); 
 
+var manager = new THREE.LoadingManager();
+    manager.onProgress = function ( item, loaded, total ) {
+
+        console.log( item, loaded, total );
+};
+
+var onProgress = function ( xhr ) {
+    if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '% downloaded' );
+    }
+};
+
+var onError = function ( xhr ) {};
+
+
+var loader = new THREE.OBJLoader( manager );
+loader.load( 'Deadmau5_Head.obj', function ( object ) {
+
+    object.traverse( function ( child ) {
+
+        if ( child instanceof THREE.Mesh ) {
+
+            //child.material.map = texture;
+
+        }
+
+    } );
+
+    object.position.y = - 80;
+    scene.add( object );
+
+}, onProgress, onError );
 
 // all the body geometry
 //var p1 = new Person();
@@ -611,6 +644,7 @@ var render = function () {
         }
     }
     */
+    
     // designate freqeuncies for each limb
 
     // legs
@@ -650,10 +684,15 @@ var render = function () {
         acc[i].z = -joints[i].rotation.z / 100;
         
     }
+
+    // find the lowest point
+    var lowl = parent.position.y;
+    var lowr = parent.position.y;
+
     //console.log(freq);
     if (freq > 500)
         cameraVelocity += 0.025;
-    parent.rotation.y += 0.01;
+    //parent.rotation.y += 0.01;
     cameraVelocity -= cameraAcceleration;
     cameraAcceleration = cameraVelocity / 10;
     cameraVelocity *= 0.95;

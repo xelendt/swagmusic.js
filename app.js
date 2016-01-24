@@ -1,6 +1,10 @@
 //var song_url = "https://soundcloud.com/monstaz-1/popcorn-funk-sneak-peak";
 var song_url = "https://soundcloud.com/majorleaguewobs/darude-sandstorm-mlg-trap-remix";
 //var song_url = "https://soundcloud.com/allarddamien/viva-la-vida";
+//var song_url = "https://soundcloud.com/espaciowwetv/john-cena-6th-wwe-theme-song-the-time-is-now";
+//var song_url = "https://soundcloud.com/dubstep/drop-the-bass-by-urban-assault";
+//var song_url = "https://soundcloud.com/rizky-rilos/queen-bohemian-rhapsody"
+
 var key = "client_id=35e6e06fe05ccb55d8d7b91c8390405d";
 var audio;
 var resolve_url = "https://api.soundcloud.com/resolve.json?url=" + song_url + "&" + key;
