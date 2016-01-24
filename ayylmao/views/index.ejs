@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>
+			body { margin: 0; }
+			canvas {
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+
+		<!--<script src="js/three.min.js"></script>-->
+        
+        <script src="https://cdn.socket.io/socket.io-1.4.3.js"></script>
+        <script>
+        var socket = io();
+        var urls = [];
+        socket.on('url', (msg) => {
+        	urls.push(msg);
+        });
+        </script>
+        
+
+
+        <script src="http://xelendt.com/js/three.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+ 		<script src="./javascripts/OBJLoader.js"></script>
+       
+        
+        <script type="x-shader/x-vertex" id="vertexShader">
+
+			varying vec3 vWorldPosition;
+
+			void main() {
+
+				vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+				vWorldPosition = worldPosition.xyz;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			}
+
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentShader">
+
+			uniform vec3 topColor;
+			uniform vec3 bottomColor;
+			uniform float offset;
+			uniform float exponent;
+
+			varying vec3 vWorldPosition;
+
+			void main() {
+
+				float h = normalize( vWorldPosition + offset ).y;
+				gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+
+			}
+
+		</script>
+		<div id="mp3_player">
+        <div id="audio_box"></div>
+	    </div>
+	    <canvas id="myChart" ></canvas>
+		<script src="./app.js"></script>
+		<script src="./javascripts/main.js"></script>
+		<script src="./javascripts/customlib.js"></script>
+        
+	</body>
+</html>
