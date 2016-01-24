@@ -1,5 +1,6 @@
 //var song_url = "https://soundcloud.com/monstaz-1/popcorn-funk-sneak-peak";
 var song_url = "https://soundcloud.com/majorleaguewobs/darude-sandstorm-mlg-trap-remix";
+//var song_url = "https://soundcloud.com/allarddamien/viva-la-vida";
 var key = "client_id=35e6e06fe05ccb55d8d7b91c8390405d";
 var audio;
 var resolve_url = "https://api.soundcloud.com/resolve.json?url=" + song_url + "&" + key;
@@ -7,7 +8,7 @@ var resolve_url = "https://api.soundcloud.com/resolve.json?url=" + song_url + "&
 var stream_url;
 
 var curFreqState = {
-	_freq: 0,
+	_freq: [0, 0, 0, 0],
 	setter: function(val) {
 		this._freq = val;
 	},
@@ -89,18 +90,21 @@ function frameLooper(){
 	analyser.getByteFrequencyData(fbc_array);
 	//	console.log(fbc_array);
 
+	var loudness = 0;
+
 	for (var i = 0; i < 1024; i++) {
 		if (fbc_array[i] > max_mag) {
 			max_mag = fbc_array[i];
 			max_ind = i;
 		}
+		loudness += fbc_array[i];
 	}
 	freq = max_ind * 44100 / 1024;
 	//console.log(freq);
 	myData.update(0, fbc_array);
 	chart.Line(myData, optionsNoAnimation);
 	
-	curFreqState.setter(freq);
+	curFreqState.setter(loudness / 150);
 
 
 

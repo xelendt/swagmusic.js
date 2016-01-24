@@ -370,7 +370,7 @@ var vel = [new Vector(0, 0, 0), new Vector(0, 0, 0), new Vector(0, 0, 0), new Ve
 var minAngle = [new Vector(0, 0, 0),
                 new Vector(-PI / 4, -PI / 4, -PI / 3),          // hipjoints
                 new Vector(-PI / 2, -PI / 2, -PI / 2),
-                new Vector(-PI / 2, -PI / 6, -PI / 6),
+                new Vector(-PI / 2, -PI / 6, 0),
                 new Vector(0, 0, 0),                            // knees
                 new Vector(0, 0, 0),                        
                 new Vector(-PI, - PI / 2, -PI),                 // shoulders
@@ -380,7 +380,7 @@ var minAngle = [new Vector(0, 0, 0),
                 ];
 var maxAngle = [new Vector(0, 0, 0),
                 new Vector(PI /4, PI / 4, PI / 3),              //hipjoints
-                new Vector(PI / 4, PI / 6, PI / 6),
+                new Vector(PI / 4, PI / 6, 0),
                 new Vector(PI / 4, PI / 2, PI / 2),
                 new Vector(PI / 2, 0, 0),                       // knees
                 new Vector(PI / 2, 0, 0),
@@ -407,26 +407,136 @@ function rotate ( object, objectMesh, v) {
 
 //parent.translate( -1*RShoulderMesh.position.x, -1*RShoulderMesh.position.y, -1*RShoulderMesh.position.z);
 //console.log(RShoulderMesh.position.x + " " + RShoulderMesh.position.y + " " + RShoulderMesh.position.z);
-
+/*
 for (var i = 0; i < joints.length; i++) {
 	vel[i].x = Math.random() - 0.5;
 	vel[i].y = Math.random() - 0.5;
 	vel[i].z = Math.random() - 0.5;
 } 
-
+*/
 
 var initTime = Date.now();
 var nat = 2.718;
 
 parent.rotation.y += PI/4;
+
+var PROB = 0.8;
+
+function elbow1 (amt) {
+    if (Math.random() < PROB) {
+        vel[RELBOW].x -= amt + 0.05;
+        vel[RELBOW].y += (Math.random() - 0.5)/2;
+    }
+    if (Math.random() < PROB) {
+        vel[LELBOW].x -= amt + 0.05;
+        vel[LELBOW].y += (Math.random() - 0.5)/2;
+    }
+}
+
+var elbowMovements = [elbow1];
+
+
+function shoulder1 (amt) {
+    if (Math.random() < PROB) {
+        vel[RSHOULDER].x -= amt * 2;
+        vel[RSHOULDER].y += (Math.random() - 0.5) * amt;
+    }
+    if (Math.random() < PROB) {
+        vel[LSHOULDER].x -= amt * 2;
+        vel[LSHOULDER].y += (Math.random() - 0.5) * amt;
+    }
+}
+
+function shoulder2 (amt) {
+    if (Math.random() < PROB) {
+        vel[RSHOULDER].z += (Math.random())/6 + amt / 2;
+    }
+
+    if (Math.random() < PROB) {
+        vel[LSHOULDER].z -= (Math.random())/6 + amt / 2;
+    }
+}
+
+var shoulderMovements = [shoulder1, shoulder2];
+
+function torso1 (amt) {
+    vel[UPPERHIPJOINT].x += (Math.random() - 0.5) * amt;
+}
+
+function torso2 (amt) {
+    vel[UPPERHIPJOINT].y += (Math.random() - 0.5) * amt;
+}
+
+function torso3 (amt) {
+    vel[UPPERHIPJOINT].z += (Math.random() - 0.5) * amt;
+}
+
+var torsoMovements = [torso1, torso2, torso3];
+
+function knee1 (amt) {
+
+    if (Math.random() < PROB) {
+    vel[RKNEE].x += amt;
+    vel[RKNEE].y += (Math.random() - 0.5)/2;
+    }
+
+    if (Math.random() < PROB) {
+    vel[LKNEE].x += amt;
+    vel[LKNEE].y += (Math.random() - 0.5)/2;
+    }
+}
+
+var kneeMovements = [knee1];
+
+function leg1 (amt) {
+
+    if (Math.random() < PROB) {
+        vel[RHIPJOINT].x -= amt;
+        vel[RHIPJOINT].y += (Math.random() - 0.5)/2;
+    }
+    if (Math.random() < PROB) {
+        vel[LHIPJOINT].x -= amt;
+        vel[LHIPJOINT].y += (Math.random() - 0.5)/2;
+        
+    }
+}
+
+function leg2 (amt) {
+
+    if (Math.random() < 0.5) {
+        vel[RHIPJOINT].z += (Math.random())/6 + amt / 6;
+        
+        vel[LHIPJOINT].x -= amt * 2;
+        vel[LKNEE].x += amt * 2;
+    } else {
+        vel[LHIPJOINT].z -= (Math.random())/6 + amt / 6;
+    
+        vel[RHIPJOINT].x -= amt * 2;
+        vel[RKNEE].x += amt * 2;
+    }
+}
+
+var legMovements = [leg1, leg2];
+
+function randChoice (arr, amt) {
+    var choice = Math.floor(Math.random() * arr.length);
+    arr[choice](amt);
+}
+
+
+var freq = 0;
+
+var cameraVelocity = 0.05;
+var cameraAcceleration = 0;
+
 var render = function () {
 	
-    var freq = curFreqState.getter();
+    freq = curFreqState.getter();
 
     requestAnimationFrame( render );
     
     
-    var timelapsed = (Date.now() - initTime) / 100;
+    var timelapsed = (Date.now() - initTime) / 50;
     //if (timelapsed > 100)
         //return;
 	/***
@@ -439,47 +549,68 @@ var render = function () {
        vel[i].z += freq / 100000;
     }
     ***/
+    console.log(freq);
     
-    var reduced = freq / 100000;
-    
-    if (freq < 0)  {
-        //console.log('case 1');
-        vel[HIPJOINT].x += reduced; vel[HIPJOINT].y += reduced; vel[HIPJOINT].z += reduced;
-    }
-    if (freq >= 0) {
-        //console.log('case 2');
-        vel[RHIPJOINT].x += reduced; vel[RHIPJOINT].y += reduced; vel[RHIPJOINT].z += reduced;
-        vel[LHIPJOINT].x -= reduced; vel[LHIPJOINT].y -= reduced; vel[LHIPJOINT].z -= reduced;
-    }
-    if (freq >= 100) {
-        //console.log('case 3');
-        vel[RKNEE].x -= reduced; vel[RKNEE].y -= reduced; vel[RKNEE].z -= reduced;
-        vel[LKNEE].x += reduced; vel[LKNEE].y += reduced; vel[LKNEE].z += reduced;
-        vel[UPPERHIPJOINT].x += (Math.random() * 2 - 1) * 0.5 * reduced;
-        vel[UPPERHIPJOINT].y += (Math.random() * 2 - 1) * 0.5 * reduced;
-        vel[UPPERHIPJOINT].z += (Math.random() * 2 - 1) * 0.5 * reduced;
-    }
-    if (freq >= 200) {
-        //console.log('case 4');
-        vel[RSHOULDER].x += reduced; vel[RSHOULDER].y += reduced; vel[RSHOULDER].z += reduced;
-        vel[LSHOULDER].x -= reduced; vel[LSHOULDER].y -= reduced; vel[LSHOULDER].z -= reduced;
-    }
-    if (freq >= 400) {
-        //console.log('case 5');
-        vel[RELBOW].x -= reduced; vel[RELBOW].y -= reduced; vel[RELBOW].z -= reduced;
-        vel[LELBOW].x += reduced; vel[LELBOW].y += reduced; vel[LELBOW].z += reduced;
-    }
-    if (freq >= 1600) {
-        //console.log('case 6');
-        vel[RKNEE].x += reduced * 3; vel[RSHOULDER].y += reduced * 3; vel[LHIPJOINT].z += reduced * 3;
-        vel[RELBOW].x -= reduced * 3; vel[LKNEE].y -= reduced * 3; vel[HIPJOINT].z -= reduced * 3;
-    }
-    if (freq >= 3200) {
-        //console.log('case 7');
-        vel[RELBOW].x += reduced * 7; vel[LSHOULDER].y += reduced * 7; vel[HIPJOINT].z += reduced * 7;
-        vel[RKNEE].x -= reduced * 7; vel[LHIPJOINT].y -= reduced * 7; vel[LELBOW].z -= reduced * 7;
+    if (timelapsed * freq / 10000 >= 0.75) {
+        initTime = Date.now();
+        //console.log(freq / 10000 + 0.05);
+        randChoice(elbowMovements, freq / 10000 + 0.05);
+        randChoice(shoulderMovements, freq / 10000 + 0.05);
+        randChoice(torsoMovements, freq / 10000 + 0.05);
+        randChoice(kneeMovements, freq / 10000 + 0.05);
+        randChoice(legMovements, freq / 10000 + 0.05);
     }
     
+    /*
+    if (timelapsed >= 25) {
+        initTime = Date.now();
+    }*/
+
+    /*
+    if (timelapsed >= 25) {
+        initTime = Date.now();
+        
+        var reduced = 0.25;
+        
+        if (freq < 0)  {
+            console.log('case 1');
+            vel[HIPJOINT].x += reduced; vel[HIPJOINT].y += reduced; vel[HIPJOINT].z += reduced;
+        }
+        if (freq >= 0) {
+            console.log('case 2');
+            vel[RHIPJOINT].x -= reduced; vel[RHIPJOINT].y += reduced; vel[RHIPJOINT].z += reduced;
+            vel[LHIPJOINT].x -= reduced; vel[LHIPJOINT].y -= reduced; vel[LHIPJOINT].z -= reduced;
+        }
+        if (freq >= 100) {
+            console.log('case 3');
+            vel[RKNEE].x += reduced; vel[RKNEE].y -= reduced; vel[RKNEE].z -= reduced;
+            vel[LKNEE].x += reduced; vel[LKNEE].y += reduced; vel[LKNEE].z += reduced;
+            vel[UPPERHIPJOINT].x += (Math.random() * 2 - 1) * 0.5 * reduced;
+            vel[UPPERHIPJOINT].y += (Math.random() * 2 - 1) * 0.5 * reduced;
+            vel[UPPERHIPJOINT].z += (Math.random() * 2 - 1) * 0.5 * reduced;
+        }
+        if (freq >= 200) {
+            console.log('case 4');
+            vel[RSHOULDER].x += reduced; vel[RSHOULDER].y += reduced; vel[RSHOULDER].z += reduced;
+            vel[LSHOULDER].x -= reduced; vel[LSHOULDER].y -= reduced; vel[LSHOULDER].z -= reduced;
+        }
+        if (freq >= 400) {
+            console.log('case 5');
+            vel[RELBOW].x -= reduced; vel[RELBOW].y -= reduced; vel[RELBOW].z -= reduced;
+            vel[LELBOW].x += reduced; vel[LELBOW].y += reduced; vel[LELBOW].z += reduced;
+        }
+        if (freq >= 1600) {
+            console.log('case 6');
+            vel[RKNEE].x += reduced * 3; vel[RSHOULDER].y += reduced * 3; vel[LHIPJOINT].z += reduced * 3;
+            vel[RELBOW].x -= reduced * 3; vel[LKNEE].y -= reduced * 3; vel[HIPJOINT].z -= reduced * 3;
+        }
+        if (freq >= 3200) {
+            console.log('case 7');
+            vel[RELBOW].x += reduced * 7; vel[LSHOULDER].y += reduced * 7; vel[HIPJOINT].z += reduced * 7;
+            vel[RKNEE].x -= reduced * 7; vel[LHIPJOINT].y -= reduced * 7; vel[LELBOW].z -= reduced * 7;
+        }
+    }
+    */
     // designate freqeuncies for each limb
 
     // legs
@@ -519,9 +650,16 @@ var render = function () {
         acc[i].z = -joints[i].rotation.z / 100;
         
     }
-   // parent.rotation.y += 0.1;
+    //console.log(freq);
+    if (freq > 500)
+        cameraVelocity += 0.025;
+    parent.rotation.y += 0.01;
+    cameraVelocity -= cameraAcceleration;
+    cameraAcceleration = cameraVelocity / 10;
+    cameraVelocity *= 0.95;
 	renderer.render(scene, camera);
     //camera.position.x += 5;
+
 };
 
 render();
