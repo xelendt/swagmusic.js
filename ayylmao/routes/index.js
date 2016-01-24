@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/twilio', function(req, res, next) {
 	var twiml = new twilio.TwimlResponse();
-	console.log(req.body);
+	console.log(req);
 	twiml.sms("Your song has been added!");
 	res.type("text/xml");
 	res.send(twiml.toString());
