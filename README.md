@@ -9,4 +9,4 @@ We also integrated Twilio so that users can easily import a song into the curren
 
 As for future plans, we want to improve the scalability and functionality of the web application, such as integrating other sound-sharing platforms and improving on the personalization of the visualizer.
 	
-
+swagmusic.js was a finalist at UofTHacks 2016.
